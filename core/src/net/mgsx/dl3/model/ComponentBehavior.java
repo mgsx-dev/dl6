@@ -9,4 +9,8 @@ public class ComponentBehavior {
 		}
 	}
 
+	public int getResistance() {
+		return 10;
+	}
+
 }

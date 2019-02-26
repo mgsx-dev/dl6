@@ -9,6 +9,8 @@ public class CardCell {
 	public int dirs;
 	public Entity entity;
 	public boolean conductor;
+	public int originDirs;
+	
 	public CardCell(int x, int y) {
 		super();
 		this.x = x;

@@ -24,7 +24,7 @@ public class Electron {
 	}
 	
 	public void update(float delta){
-		if(dst != null){
+		if(dst != null && src.flow>=0){
 			time += delta * 10;
 		}
 		if(time > 1){

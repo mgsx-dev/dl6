@@ -36,15 +36,35 @@ public class Card {
 		CardCell cell = cell(x, y);
 		cell.component = new Component(type);
 		// update connections
-		cell.dirs = cell.component.getDirs();
+		cell.dirs = cell.component.type.toDirs;
 		
 		for(int dir : Dirs.ALL){
 			CardCell adj = cell(cell, dir);
-			if(adj != null && adj.conductor){
+			if(adj != null && adj.conductor /*&& adj.entity == null*/){
 				if((cell.dirs & dir) == 0){
 					adj.dirs &= ~Dirs.inverse(dir);
 				}else{
-					adj.dirs |= Dirs.inverse(dir);
+					//adj.dirs |= Dirs.inverse(dir);
+				}
+			}
+		}
+		
+		updateFlows();
+		
+		return cell;
+	}
+	
+	public CardCell removeComponent(int x, int y) {
+		CardCell cell = cell(x, y);
+		cell.component = null;
+		cell.dirs = cell.originDirs;
+		for(int dir : Dirs.ALL){
+			CardCell adj = cell(cell, dir);
+			if(adj != null && adj.conductor){
+				if((cell.dirs & dir) != 0){
+					if(adj.component == null || (adj.component.type.toDirs & Dirs.inverse(dir)) != 0){
+						adj.dirs |= Dirs.inverse(dir);
+					}
 				}
 			}
 		}
@@ -59,7 +79,7 @@ public class Card {
 		return cell(cell.x + d[0], cell.y + d[1]);
 	}
 	
-	private void updateFlows() 
+	public void updateFlows() 
 	{
 		CardCell powerCell = null;
 		CardCell gndCell = null;
@@ -67,8 +87,11 @@ public class Card {
 			if(cell.entity instanceof Power){
 				powerCell = cell;
 			}
-			if(cell.entity instanceof PowerGND){
+			else if(cell.entity instanceof PowerGND){
 				gndCell = cell;
+			}
+			else{
+				cell.flow = -1;
 			}
 		}
 		if(powerCell == null || gndCell == null) return;
@@ -79,24 +102,34 @@ public class Card {
 		nextHeads.add(gndCell);
 		gndCell.flow = 0;
 		
+		int cableRes = 1;
 		
 		while(nextHeads.size > 0){
 			heads.addAll(nextHeads);
 			nextHeads.clear();
 			while(heads.size > 0){
 				CardCell head = heads.pop();
+				if(head.component != null){
+					// head.flow += head.component.type.behavior.getResistance();
+				}
 				visited.add(head);
 				for(int dir : Dirs.ALL){
 					if((head.dirs & dir)==0) continue;
 					CardCell adj = cell(head, dir);
+					if(adj != null && adj.flow >= 0 && adj.flow>head.flow+cableRes){
+						adj.flow = head.flow+cableRes;
+					}
 					if(adj != null && !visited.contains(adj)){
 						nextHeads.add(adj);
-						adj.flow = head.flow+1;
+						adj.flow = head.flow+cableRes;
+						if(adj.component != null){
+							adj.flow += adj.component.type.behavior.getResistance();
+						}
 					}
 				}
 			}
 		}
-		powerCell.flow = 100000;
+		// powerCell.flow = 100000;
 	}
 	
 }

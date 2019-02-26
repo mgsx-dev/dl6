@@ -25,12 +25,14 @@ public class CardWorld {
 					Power power = (Power)entity;
 					if(power.enabled){
 						
-						power.period = .1f; // XXX
+						power.period = .25f; // XXX
 						
 						power.timeout -= delta;
 						if(power.timeout < 0){
 							power.timeout = power.period;
-							spawnElectron(cell);
+							if(electrons.size < 101){
+								spawnElectron(cell);
+							}
 						}
 					}
 				}

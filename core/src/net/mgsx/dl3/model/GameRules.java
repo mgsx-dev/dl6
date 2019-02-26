@@ -13,11 +13,11 @@ public class GameRules {
 			componentTypes = new Array<ComponentType>();
 			
 			componentTypes.add(new ComponentType("resistor", 128, new Resistor(), false, Dirs.LEFT | Dirs.RIGHT));
-			componentTypes.add(new ComponentType("led", 192, new Led(), false, Dirs.RIGHT));
+			componentTypes.add(new ComponentType("led", 192, new Led(), false, Dirs.LEFT, Dirs.RIGHT));
 			componentTypes.add(new ComponentType("lcd", 256, new Lcd(), false, Dirs.LEFT | Dirs.RIGHT));
 			
 			componentTypes.add(new ComponentType("resistor", 160, new Resistor(), true, Dirs.UP | Dirs.DOWN));
-			componentTypes.add(new ComponentType("led", 224, new Led(), true, Dirs.DOWN));
+			componentTypes.add(new ComponentType("led", 224, new Led(), true, Dirs.UP , Dirs.DOWN));
 			componentTypes.add(new ComponentType("lcd", 288, new Lcd(), true, Dirs.UP | Dirs.DOWN));
 		}
 		return componentTypes;

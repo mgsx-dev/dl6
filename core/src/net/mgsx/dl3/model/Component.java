@@ -21,10 +21,6 @@ public class Component {
 		this.type = type;
 	}
 
-	public int getDirs() {
-		return type.dirs;
-	}
-
 	public void update(float delta) {
 		type.behavior.update(this, delta);
 	}

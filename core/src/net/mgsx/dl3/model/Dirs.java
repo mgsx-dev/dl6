@@ -1,6 +1,7 @@
 package net.mgsx.dl3.model;
 
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 public class Dirs {
 	public static final int UP = 1;
@@ -51,5 +52,15 @@ public class Dirs {
 		if(dir == LEFT) return RIGHT;
 		if(dir == RIGHT) return LEFT;
 		return 0;
+	}
+
+	public static ObjectMap<Integer, Integer> createDirsToTile() 
+	{
+		ObjectMap<Integer, Integer> tmp = createTileToDirs();
+		ObjectMap<Integer, Integer> r = new ObjectMap<Integer, Integer>();
+		for(Entry<Integer, Integer> e : tmp){
+			r.put(e.value, e.key);
+		}
+		return r;
 	}
 }

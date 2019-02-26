@@ -22,6 +22,7 @@ import net.mgsx.dl3.model.Card;
 import net.mgsx.dl3.model.CardCell;
 import net.mgsx.dl3.model.CardWorld;
 import net.mgsx.dl3.ui.EnergyGameUI;
+import net.mgsx.dl3.ui.GraphDebug;
 import net.mgsx.dl3.utils.PixelPerfectViewport;
 import net.mgsx.dl3.utils.StageScreen;
 
@@ -46,6 +47,9 @@ public class EnergyGameScreen extends StageScreen
 		shapes = new ShapeRenderer();
 		card = CardFactory.fromMap(map);
 		world = new CardWorld(card);
+		stage.addActor(new GraphDebug(card));
+		
+		card.updateFlows();
 	}
 	
 	@Override
@@ -53,10 +57,19 @@ public class EnergyGameScreen extends StageScreen
 		Gdx.input.setInputProcessor(new InputMultiplexer(stage, new InputAdapter(){
 			@Override
 			public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-				CardCell cell = card.createComponent(gx, gy, ui.currentType);
-				CardFactory.setTile(map, cell);
-				cell.component.sprite = new Sprite(GameAssets.i.tile(cell.component.type.tileBaseID));
-				cell.component.sprite.setPosition(cell.x*32, cell.y*32);
+				CardCell cell = card.cell(gx, gy);
+				if(cell == null || !cell.conductor || cell.entity!=null) return true;
+				if(ui.currentType != null){
+					cell = card.createComponent(gx, gy, ui.currentType);
+					CardFactory.setTile(map, cell);
+					CardFactory.setAdjTiles(card, map, cell);
+					cell.component.sprite = new Sprite(GameAssets.i.tile(cell.component.type.tileBaseID));
+					cell.component.sprite.setPosition(cell.x*32, cell.y*32);
+				}else if(cell.component != null){
+					cell = card.removeComponent(gx, gy);
+					CardFactory.setTile(map, cell);
+					CardFactory.setAdjTiles(card, map, cell);
+				}
 				return true;
 			}
 		}));

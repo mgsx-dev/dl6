@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
+import net.mgsx.dl3.assets.GameAssets;
 import net.mgsx.dl3.model.ComponentType;
 import net.mgsx.dl3.model.GameRules;
 
@@ -21,6 +22,19 @@ public class EnergyGameUI extends Table
 	public EnergyGameUI() {
 		ButtonGroup btCompoGroup = new ButtonGroup();
 		Table btList = new Table();
+		
+		final ImageButton btRemove = new ImageButton(GameAssets.i.getButtonRemoveUp(), GameAssets.i.getButtonRemoveDown(), GameAssets.i.getButtonRemoveDown());
+		btList.add(btRemove);
+		btRemove.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if(btRemove.isChecked()) currentType = null;
+				if(currentImage != null) currentImage.remove();
+				currentImage = new Image(GameAssets.i.getButtonRemoveUp());
+			}
+		});
+		btCompoGroup.add(btRemove);
+		
 		for(final ComponentType type : GameRules.getComponentTypes()){
 			final ImageButton bt = new ImageButton(type.getButtonUp(), type.getButtonDown(), type.getButtonDown());
 			btList.add(bt);
