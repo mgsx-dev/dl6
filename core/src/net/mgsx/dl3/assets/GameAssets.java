@@ -1,6 +1,7 @@
 package net.mgsx.dl3.assets;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
@@ -12,10 +13,13 @@ public class GameAssets {
 	public static final GameAssets i = new GameAssets();
 	public TiledMap card1;
 	public TiledMapTileSet tileset;
+	public BitmapFont font;
 	
 	public void load(){
 		card1 = new TmxMapLoader().load("../assets/src/card2.tmx");
 		tileset = card1.getTileSets().getTileSet(0);
+		font = new BitmapFont();
+		font.getData().scale(1f / 32f);
 	}
 
 	public TextureRegion electron() {

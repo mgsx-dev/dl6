@@ -10,6 +10,8 @@ public class Card {
 	public final CardCell [] cells;
 	public final int w, h;
 	
+	public int money = GameRules.INITIAL_MONEY;
+	
 	private ObjectSet<CardCell> visited = new ObjectSet<CardCell>();
 	private Array<CardCell> heads = new Array<CardCell>();
 	private Array<CardCell> nextHeads = new Array<CardCell>();

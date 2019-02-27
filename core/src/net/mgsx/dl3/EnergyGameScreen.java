@@ -42,11 +42,13 @@ public class EnergyGameScreen extends StageScreen
 		super(new PixelPerfectViewport(EnergyGame.WIDTH, EnergyGame.HEIGHT));
 		map = GameAssets.i.card1;
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
-		stage.addActor(ui = new EnergyGameUI());
-		ui.setFillParent(true);
 		shapes = new ShapeRenderer();
 		card = CardFactory.fromMap(map);
 		world = new CardWorld(card);
+		
+		// stage
+		stage.addActor(ui = new EnergyGameUI(card));
+		ui.setFillParent(true);
 		stage.addActor(new GraphDebug(card));
 		
 		card.updateFlows();
@@ -60,6 +62,9 @@ public class EnergyGameScreen extends StageScreen
 				CardCell cell = card.cell(gx, gy);
 				if(cell == null || !cell.conductor || cell.entity!=null) return true;
 				if(ui.currentType != null){
+					if(card.money < ui.currentType.cost) return true;
+					card.money -= ui.currentType.cost;
+					
 					cell = card.createComponent(gx, gy, ui.currentType);
 					CardFactory.setTile(map, cell);
 					CardFactory.setAdjTiles(card, map, cell);

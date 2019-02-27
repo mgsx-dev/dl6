@@ -7,10 +7,48 @@ public class ComponentBehavior {
 		if(component.energy < 0){
 			component.energy = 0;
 		}
+		if(component.energy >= component.energyMax/2){
+			component.timeAtLimit += delta;
+			if(component.timeAtLimit > 5){
+				component.dead = true;
+				// TODO cut circuit ?
+			}
+		}else{
+			component.timeAtLimit = 0;
+		}
+		if(component.dead){
+			component.sprite.setRegion(component.type.deadAnimation.getKeyFrame(component.animationTime, true));
+		}
+		else if(component.energy > 0){
+			if(component.energy >= component.energyMax/2){
+				component.sprite.setRegion(component.type.limitAnimation.getKeyFrame(component.animationTime, true));
+			}else{
+				component.sprite.setRegion(component.type.activeAnimation.getKeyFrame(component.animationTime, true));
+			}
+		}else{
+			component.sprite.setRegion(component.type.idleAnimation.getKeyFrame(component.animationTime, true));
+		}
 	}
 
 	public int getResistance() {
 		return 10;
+	}
+
+	public void onElectronArrive(Component component, Electron electron) {
+		electron.visible = false;
+		
+		if(component.energy + 1 <= component.energyMax){
+			electron.energy--;
+			component.addEnergy(1);
+		}
+	}
+
+	public void onElectronLeave(Component component, Electron electron) {
+		electron.visible = true;
+	}
+
+	public int collect(Component component) {
+		return 0;
 	}
 
 }

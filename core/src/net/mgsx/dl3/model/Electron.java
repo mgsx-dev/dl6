@@ -2,6 +2,7 @@ package net.mgsx.dl3.model;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import net.mgsx.dl3.assets.GameAssets;
@@ -15,8 +16,13 @@ public class Electron {
 	public CardCell src, dst;
 	public float time;
 	public int energy = 10;
+	public float scale = 1;
 
 	public boolean toRemove;
+
+	public boolean visible = true;
+
+	public float speed = 8;
 	
 	public Electron() {
 		sprite = new Sprite(GameAssets.i.electron());
@@ -25,19 +31,18 @@ public class Electron {
 	
 	public void update(float delta){
 		if(dst != null && src.flow>=0){
-			time += delta * 10;
+			time += delta * speed;
 		}
 		if(time > 1){
+			if(src.component != null && !src.component.dead){
+				src.component.onElectronLeave(this);
+			}
 			src = dst;
 			if(dst.entity instanceof PowerGND){
 				toRemove = true;
 			}else{
-				// ComponentBehavior type = dst.component != null ? dst.component.type.behavior : null;
-				if(dst.component != null){
-					if(dst.component.energy + 1 <= dst.component.energyMax){
-						energy--;
-						dst.component.addEnergy(1);
-					}
+				if(dst.component != null && !dst.component.dead){
+					dst.component.onElectronArrive(this);
 				}
 			}
 			if(energy <= 0) toRemove = true;
@@ -48,12 +53,25 @@ public class Electron {
 		position.set(src.x, src.y);
 		if(dst != null){
 			position.lerp(v1.set(dst.x, dst.y), time);
+			
+			float scaleForSrc = 1;
+			float scaleForDst = 1;
+			if(src.component != null){
+				float t = MathUtils.clamp(src.component.type.vertical ? time+.5f : time, 0, 1);
+				scaleForSrc = MathUtils.lerp(0, 1, t * t);
+			}
+			if(dst.component != null){
+				float t = MathUtils.clamp(dst.component.type.vertical ? time+.5f : time, 0, 1);
+				scaleForDst = MathUtils.lerp(1, 0, 1 - (1-t) * (1-t));
+			}
+			scale = Math.min(scaleForSrc, scaleForDst);
 		}
 	}
 
 	public void draw(Batch batch) {
+		//if(!visible) return;
 		sprite.setPosition(position.x * 32, position.y * 32 - 13);
-		sprite.setScale(energy / 10f);
+		sprite.setScale(scale * energy / 10f);
 		sprite.draw(batch);
 	}
 }

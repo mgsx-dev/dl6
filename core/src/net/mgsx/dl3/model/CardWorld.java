@@ -9,7 +9,8 @@ public class CardWorld {
 	private Card card;
 	private Array<Electron> electrons = new Array<Electron>();
 	private Array<CardCell> destinations = new Array<CardCell>();
-
+	private float collectTimeout;
+	
 	public CardWorld(Card card) {
 		super();
 		this.card = card;
@@ -17,6 +18,13 @@ public class CardWorld {
 	
 	public void update(float delta) 
 	{
+		collectTimeout -= delta;
+		boolean collect = false;
+		if(collectTimeout < 0){
+			collectTimeout = 1;
+			collect = true;
+		}
+		int collected = 0;
 		for(int y=0 ; y<card.h ; y++){
 			for(int x=0 ; x<card.w ; x++){
 				CardCell cell = card.cell(x, y);
@@ -36,8 +44,12 @@ public class CardWorld {
 						}
 					}
 				}
+				if(collect && cell.component != null && !cell.component.dead){
+					collected += cell.component.collect();
+				}
 			}
 		}
+		card.money += collected;
 		
 		for(Electron e : electrons){
 			e.update(delta);
