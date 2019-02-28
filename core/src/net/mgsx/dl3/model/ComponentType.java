@@ -21,6 +21,7 @@ public class ComponentType {
 	public Animation<TextureRegion> deadAnimation;
 	
 	public int cost;
+	public int absorption = 1;
 
 	public ComponentType(String id, int tileBaseID, ComponentBehavior behavior, boolean vertical, int dirs) {
 		this(id, tileBaseID, behavior, vertical, dirs, dirs);
@@ -36,7 +37,7 @@ public class ComponentType {
 		this.idleAnimation = animation(tileBaseID, 0, 1);
 		this.activeAnimation = animation(tileBaseID, 1, 8);
 		this.limitAnimation = animation(tileBaseID, 9, 2);
-		this.deadAnimation = animation(tileBaseID, 11, 1);
+		this.deadAnimation = animation(tileBaseID, 12, 1);
 	}
 
 	private static Animation<TextureRegion> animation(int tileId, int offset, int len) {

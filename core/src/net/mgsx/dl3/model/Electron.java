@@ -15,7 +15,7 @@ public class Electron {
 	public final Vector2 position = new Vector2();
 	public CardCell src, dst;
 	public float time;
-	public int energy = 10;
+	public int energy = GameRules.ELECTRON_ENERGY;
 	public float scale = 1;
 
 	public boolean toRemove;
@@ -27,6 +27,7 @@ public class Electron {
 	public Electron() {
 		sprite = new Sprite(GameAssets.i.electron());
 		sprite.setOriginCenter();
+		scale = 0;
 	}
 	
 	public void update(float delta){
@@ -39,6 +40,7 @@ public class Electron {
 			}
 			src = dst;
 			if(dst.entity instanceof PowerGND){
+				((PowerGND)dst.entity).onElectronArrive(this);
 				toRemove = true;
 			}else{
 				if(dst.component != null && !dst.component.dead){
@@ -59,9 +61,15 @@ public class Electron {
 			if(src.component != null){
 				float t = MathUtils.clamp(src.component.type.vertical ? time+.5f : time, 0, 1);
 				scaleForSrc = MathUtils.lerp(0, 1, t * t);
+			}else if(src.entity != null){
+				float t = MathUtils.clamp(time, 0, 1);
+				scaleForSrc = MathUtils.lerp(0, 1, t * t);
 			}
 			if(dst.component != null){
 				float t = MathUtils.clamp(dst.component.type.vertical ? time+.5f : time, 0, 1);
+				scaleForDst = MathUtils.lerp(1, 0, 1 - (1-t) * (1-t));
+			}else if(dst.entity != null){
+				float t = MathUtils.clamp(time, 0, 1);
 				scaleForDst = MathUtils.lerp(1, 0, 1 - (1-t) * (1-t));
 			}
 			scale = Math.min(scaleForSrc, scaleForDst);

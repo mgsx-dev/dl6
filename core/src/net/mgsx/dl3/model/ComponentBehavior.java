@@ -9,10 +9,6 @@ public class ComponentBehavior {
 		}
 		if(component.energy >= component.energyMax/2){
 			component.timeAtLimit += delta;
-			if(component.timeAtLimit > 5){
-				component.dead = true;
-				// TODO cut circuit ?
-			}
 		}else{
 			component.timeAtLimit = 0;
 		}
@@ -37,9 +33,16 @@ public class ComponentBehavior {
 	public void onElectronArrive(Component component, Electron electron) {
 		electron.visible = false;
 		
-		if(component.energy + 1 <= component.energyMax){
-			electron.energy--;
-			component.addEnergy(1);
+		if(component.energy + component.type.absorption <= component.energyMax){
+			electron.energy -= component.type.absorption;
+			component.addEnergy(component.type.absorption);
+			
+			if(component.energy >= component.energyMax/2){
+				if(component.timeAtLimit > 5){
+					component.dead = true;
+					// TODO cut circuit ?
+				}
+			}
 		}
 	}
 

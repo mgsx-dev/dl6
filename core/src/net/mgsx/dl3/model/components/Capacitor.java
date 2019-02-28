@@ -9,9 +9,9 @@ public class Capacitor extends ComponentBehavior {
 	@Override
 	public void onElectronArrive(Component component, Electron electron) {
 		super.onElectronArrive(component, electron);
-		if(component.energy < component.energyMax / 2){
+		//if(component.energy < component.energyMax / 2){
 			electron.speed = Math.max(electron.speed / 2, 1);
-		}
+		//}
 	}
 	
 	@Override

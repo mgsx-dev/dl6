@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.ObjectSet;
 
 import net.mgsx.dl3.model.components.Power;
 import net.mgsx.dl3.model.components.PowerGND;
+import net.mgsx.dl3.model.components.PowerSwitch;
 
 public class Card {
 	public final CardCell [] cells;
@@ -15,6 +16,12 @@ public class Card {
 	private ObjectSet<CardCell> visited = new ObjectSet<CardCell>();
 	private Array<CardCell> heads = new Array<CardCell>();
 	private Array<CardCell> nextHeads = new Array<CardCell>();
+	public Power power;
+	public PowerGND powerGnd;
+	public PowerSwitch powerSwitch;
+	public boolean shortcut;
+	public CardCell powerSwitchCell;
+	public boolean finished;
 	
 	
 	public Card(int w, int h) {
