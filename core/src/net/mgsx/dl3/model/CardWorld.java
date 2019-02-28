@@ -61,14 +61,7 @@ public class CardWorld {
 					}
 				}else if(entity instanceof PowerGND){
 					entity.update(delta);
-					// check game over
 					PowerGND gnd = (PowerGND) entity;
-					if(gnd.energy > GameRules.POWER_LOAD_SUPPORT){
-						// System.out.println("shortcut overload !!!!");
-						// card.power.enabled = false;
-						card.shortcut = true;
-						// TODO game over ?
-					}
 					float rate = gnd.energy / GameRules.POWER_LOAD_SUPPORT;
 					CardFactory.setMeterTile(map, cell, rate);
 				}
@@ -115,10 +108,18 @@ public class CardWorld {
 			cell.update(delta);
 		}
 		
+		// cut power when no more electrons
 		if(card.power.enabled && card.power.electronsRemain <= 0){
 			card.power.enabled = false;
 		}
-		if(card.power.electronsRemain <= 0 && electrons.size == 0){
+		
+		if(card.shortcut){
+			// game over (handled by UI)
+		}else if(card.powerGnd.energy > GameRules.POWER_LOAD_SUPPORT){
+			// loose
+			card.shortcut = true;
+		}else  if(card.power.electronsRemain <= 0 && electrons.size == 0){
+			// win
 			card.finished = true;
 		}
 	}
