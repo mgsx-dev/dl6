@@ -10,9 +10,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -21,13 +20,15 @@ public class GameAssets {
 	public TiledMapTileSet tileset;
 	public BitmapFont font;
 	private Texture titleScreen;
+	public Skin skin;
 	
 	public void load(){
-		TiledMap card1 = new TmxMapLoader().load("../assets/src/card1.tmx");
+		TiledMap card1 = new TmxMapLoader().load("../../assets/src/card1.tmx");
 		tileset = card1.getTileSets().getTileSet(0);
 		font = new BitmapFont();
 		font.getData().scale(1f / 32f);
-		titleScreen = new Texture(Gdx.files.local("../assets/src/title.png"));
+		titleScreen = new Texture(Gdx.files.local("../../assets/src/title.png"));
+		skin = new Skin(Gdx.files.internal("skins/game-skin.json"));
 	}
 
 	public TextureRegion electron() {
@@ -45,14 +46,15 @@ public class GameAssets {
 		return tileset.getTile(id+1);
 	}
 
-	public Drawable getButtonRemoveUp() {
-		return getButtonUp(38);
+	public Drawable crossDrawable() {
+		return tileAsDrawable(38);
 	}
-	public Drawable getButtonRemoveDown() {
-		return getButtonDown(38);
-	}
+	
 	public Drawable getButtonUp(int id) {
 		return new TextureRegionDrawable(tileset.getTile(id + 1).getTextureRegion());
+	}
+	public Drawable tileAsDrawable(int id){
+		return new TextureRegionDrawable(tile(id));
 	}
 	public Drawable getButtonDown(int id) {
 		TextureRegionDrawable drawable = (TextureRegionDrawable)getButtonUp(id);
@@ -60,8 +62,7 @@ public class GameAssets {
 	}
 
 	public Label createLabel(String text) {
-		LabelStyle style = new Label.LabelStyle(GameAssets.i.font, Color.WHITE);
-		return new Label(text, style);
+		return new Label(text, skin);
 	}
 
 	public Drawable getButtonUp() 
@@ -73,7 +74,7 @@ public class GameAssets {
 	}
 
 	public TiledMap card(String cardID) {
-		return new TmxMapLoader().load("../assets/src/" + cardID + ".tmx");
+		return new TmxMapLoader().load("../../assets/src/" + cardID + ".tmx");
 	}
 
 	public Drawable titleScreen() {
@@ -81,10 +82,10 @@ public class GameAssets {
 	}
 
 	public TextButton textButton(String text) {
-		Drawable d = getButtonUp();
-		TextButtonStyle style = new TextButton.TextButtonStyle(d, d, d, font);
-		TextButton bt = new TextButton(text, style);
-		return bt;
+		return new TextButton(text, skin);
+	}
+	public TextButton textButton(String text, String style) {
+		return new TextButton(text, skin, style);
 	}
 
 }

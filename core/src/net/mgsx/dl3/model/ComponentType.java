@@ -48,11 +48,8 @@ public class ComponentType {
 		}
 		return new Animation<TextureRegion>(1f, frames);
 	}
-	public Drawable getButtonUp() {
-		return GameAssets.i.getButtonUp(tileBaseID);
-	}
-	public Drawable getButtonDown() {
-		return GameAssets.i.getButtonDown(tileBaseID);
+	public Drawable drawable() {
+		return GameAssets.i.tileAsDrawable(tileBaseID);
 	}
 
 }

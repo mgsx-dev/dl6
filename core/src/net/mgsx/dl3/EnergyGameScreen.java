@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -132,17 +131,20 @@ public class EnergyGameScreen extends StageScreen
 		Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		viewport.unproject(worldCursor.set(Gdx.input.getX(), Gdx.input.getY()));
-		ui.setCursorPosition(worldCursor);
 		
 		TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(0);
 		gx = (int)(worldCursor.x / 32);
 		gy = (int)(worldCursor.y / 32);
+		
+		
+		boolean showCursor = !(card.finished || card.shortcut) && gx >= 2 && gy <= 8 && gy >= 1 && gx <= 16;
+		
 		gx = MathUtils.clamp(gx, 0, layer.getWidth()-1);
 		gy = MathUtils.clamp(gy, 0, layer.getHeight()-1);
-		Cell cell = layer.getCell(gx, gy);
-		if(cell != null){
-			
-		}
+
+		
+		ui.setCursorPosition(worldCursor);
+		ui.setCursorVisible(showCursor);
 		
 		world.update(delta);
 		
@@ -156,10 +158,12 @@ public class EnergyGameScreen extends StageScreen
 		
 		super.render(delta);
 		
-		shapes.setProjectionMatrix(viewport.getCamera().combined);
-		shapes.begin(ShapeType.Line);
-		shapes.rect(gx * 32, gy * 32, 32, 32);
-		shapes.end();
+		if(showCursor){
+			shapes.setProjectionMatrix(viewport.getCamera().combined);
+			shapes.begin(ShapeType.Line);
+			shapes.rect(gx * 32, gy * 32, 32, 32);
+			shapes.end();
+		}
 		
 		if(backToMenu){
 			dispose();

@@ -1,14 +1,12 @@
 package net.mgsx.dl3.ui;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -33,23 +31,29 @@ public class EnergyGameUI extends Table
 	
 	public EnergyGameUI(Card card) {
 		this.card = card;
+		
+		this.pad(2);
+		
 		ButtonGroup btCompoGroup = new ButtonGroup();
 		Table btList = new Table();
+		btList.defaults().fill().space(2);
 		
-		final ImageButton btRemove = new ImageButton(GameAssets.i.getButtonRemoveUp(), GameAssets.i.getButtonRemoveDown(), GameAssets.i.getButtonRemoveDown());
+		final Button btRemove = new Button(GameAssets.i.skin, "toggle");
+		btRemove.add(new Image(GameAssets.i.crossDrawable()));
+		
 		btList.add(btRemove);
 		btRemove.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				if(btRemove.isChecked()) currentType = null;
 				if(currentImage != null) currentImage.remove();
-				currentImage = new Image(GameAssets.i.getButtonRemoveUp());
+				currentImage = new Image(GameAssets.i.crossDrawable());
 			}
 		});
 		btCompoGroup.add(btRemove);
 		
 		for(final ComponentType type : GameRules.getComponentTypes()){
-			final ImageButton bt = createBuyButton(type.getButtonUp(), type.getButtonDown(), type.cost);
+			final Button bt = createBuyButton(type.drawable(), type.cost);
 			btList.add(bt);
 			btCompoGroup.add(bt);
 			bt.addListener(new ChangeListener() {
@@ -57,25 +61,27 @@ public class EnergyGameUI extends Table
 				public void changed(ChangeEvent event, Actor actor) {
 					if(bt.isChecked()) currentType = type;
 					if(currentImage != null) currentImage.remove();
-					currentImage = new Image(type.getButtonUp());
+					currentImage = new Image(type.drawable());
 				}
 			});
 			btCompoGroup.add(bt);
 		}
 		
 		Table stats = new Table();
-		stats.defaults().space(4);
+		stats.defaults().space(4).fill();
 		
 		TextButton btMenu = GameAssets.i.textButton("Resign");
 		stats.add(btMenu);
 		
+		labelMoney = new Label("", GameAssets.i.skin);
+		stats.add(labelMoney);
+
+		stats.row();
+		
 		TextButton btPow = GameAssets.i.textButton("Powering");
 		stats.add(btPow);
-		
-		labelMoney = new Label("", new Label.LabelStyle(GameAssets.i.font, Color.WHITE));
-		stats.add(labelMoney);
-		
-		labelElectrons = new Label("", new Label.LabelStyle(GameAssets.i.font, Color.WHITE));
+
+		labelElectrons = new Label("", GameAssets.i.skin);
 		stats.add(labelElectrons);
 		
 		add(stats).expandY().top();
@@ -96,11 +102,17 @@ public class EnergyGameUI extends Table
 		});
 	}
 	
-	private ImageButton createBuyButton(Drawable up, Drawable down, int cost){
-		final ImageButton bt = new ImageButton(up, down, down);
+	private Button createBuyButton(Drawable drawable, final int cost){
+		final Button bt = new Button(GameAssets.i.skin, "toggle"){
+			@Override
+			public void act(float delta) {
+				setDisabled(cost > card.money);
+				super.act(delta);
+			}
+		};
+		bt.add(new Image(drawable));
 		bt.row();
-		LabelStyle style = new Label.LabelStyle(GameAssets.i.font, Color.WHITE);
-		bt.add(new Label(cost + "$", style));
+		bt.add(new Label(cost + "", GameAssets.i.skin));
 		return bt;
 	}
 	
@@ -109,7 +121,12 @@ public class EnergyGameUI extends Table
 		if(currentImage != null && currentImage.getStage() == null){
 			getStage().addActor(currentImage);
 		}
-		labelMoney.setText("Cash: " + card.money + "$");
+		
+//		if(currentImage != null){
+//			currentImage.setVisible(!(card.shortcut || card.finished));
+//		}
+		
+		labelMoney.setText("Cash: " + card.money);
 		
 		labelElectrons.setText("Electrons: " + card.power.electronsRemain);
 		
@@ -163,9 +180,19 @@ public class EnergyGameUI extends Table
 	public void setCursorPosition(Vector2 worldCursor) 
 	{
 		if(currentImage != null){
-			currentImage.setPosition(worldCursor.x, worldCursor.y, Align.center | Align.bottom);
+			if(currentType != null){
+				currentImage.setPosition(worldCursor.x, worldCursor.y, Align.center | Align.bottom);
+			}else{
+				currentImage.setPosition(worldCursor.x, worldCursor.y, Align.center);
+			}
 			currentImage.getColor().a = .5f;
 			currentImage.setTouchable(Touchable.disabled);
+		}
+	}
+
+	public void setCursorVisible(boolean state) {
+		if(currentImage != null){
+			currentImage.setVisible(state);
 		}
 	}
 }

@@ -1,0 +1,47 @@
+
+game-skin.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+default
+  rotate: false
+  xy: 2, 38
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+default-round
+  rotate: false
+  xy: 2, 2
+  size: 14, 16
+  split: 6, 6, 8, 7
+  pad: 5, 5, 5, 5
+  orig: 14, 16
+  offset: 0, 0
+  index: -1
+default-round-disabled
+  rotate: false
+  xy: 2, 20
+  size: 14, 16
+  split: 6, 6, 8, 7
+  pad: 5, 5, 5, 5
+  orig: 14, 16
+  offset: 0, 0
+  index: -1
+default-round-down
+  rotate: false
+  xy: 516, 534
+  size: 14, 16
+  split: 6, 6, 8, 7
+  pad: 5, 5, 5, 5
+  orig: 14, 16
+  offset: 0, 0
+  index: -1
+white
+  rotate: false
+  xy: 18, 33
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
