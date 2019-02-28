@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public class GameAssets {
 	public static final GameAssets i = new GameAssets();
@@ -21,14 +22,18 @@ public class GameAssets {
 	public BitmapFont font;
 	private Texture titleScreen;
 	public Skin skin;
+	public final ObjectMap<String, String> cards = new ObjectMap<String, String>();
 	
 	public void load(){
-		TiledMap card1 = new TmxMapLoader().load("../../assets/src/card1.tmx");
+		TiledMap card1 = new TmxMapLoader().load("card1.tmx");
 		tileset = card1.getTileSets().getTileSet(0);
 		font = new BitmapFont();
 		font.getData().scale(1f / 32f);
-		titleScreen = new Texture(Gdx.files.local("../../assets/src/title.png"));
+		titleScreen = new Texture(Gdx.files.internal("title.png"));
 		skin = new Skin(Gdx.files.internal("skins/game-skin.json"));
+		for(int i=1 ; i<=8 ; i++){
+			cards.put("Board " + i, "card" + i);
+		}
 	}
 
 	public TextureRegion electron() {
@@ -74,7 +79,7 @@ public class GameAssets {
 	}
 
 	public TiledMap card(String cardID) {
-		return new TmxMapLoader().load("../../assets/src/" + cardID + ".tmx");
+		return new TmxMapLoader().load(cardID + ".tmx");
 	}
 
 	public Drawable titleScreen() {
