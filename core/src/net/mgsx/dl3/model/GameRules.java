@@ -9,6 +9,8 @@ import net.mgsx.dl3.model.components.Resistor;
 
 public class GameRules {
 	
+	public static final boolean DEBUG = false;
+	
 	public static final int INITIAL_MONEY = 100;
 	
 	public static final int ELECTRON_ENERGY = 10;
@@ -18,7 +20,7 @@ public class GameRules {
 	public static final float POWER_COOL_DOWN = 10f;
 
 	public static final int INITIAL_ELECTRONS = 100;
-	
+
 	
 	private static Array<ComponentType> componentTypes;
 	public static Array<ComponentType> getComponentTypes(){

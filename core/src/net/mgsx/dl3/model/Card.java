@@ -22,6 +22,7 @@ public class Card {
 	public boolean shortcut;
 	public CardCell powerSwitchCell;
 	public boolean finished;
+	public String name;
 	
 	
 	public Card(int w, int h) {

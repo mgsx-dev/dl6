@@ -1,5 +1,6 @@
 package net.mgsx.dl3.ui;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -87,6 +88,10 @@ public class EnergyGameUI extends Table
 		add(stats).expandY().top();
 		add().expand();
 		add(btList).expandY().top();
+		
+		row();
+		
+		add(new Label(card.name, GameAssets.i.skin)).colspan(3).expandX().right().getActor().setColor(Color.DARK_GRAY);
 		
 		btMenu.addListener(new ChangeListener() {
 			@Override

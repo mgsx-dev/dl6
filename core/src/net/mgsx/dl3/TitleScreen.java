@@ -4,9 +4,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 import net.mgsx.dl3.assets.GameAssets;
+import net.mgsx.dl3.assets.GameAssets.CardEntry;
 import net.mgsx.dl3.utils.PixelPerfectViewport;
 import net.mgsx.dl3.utils.StageScreen;
 
@@ -25,17 +25,16 @@ public class TitleScreen extends StageScreen
 		root.add(menu).expandX().center().padTop(172);
 		
 		int cnt = 0;
-		for(Entry<String, String> entry : GameAssets.i.cards){
-			if(cnt % 4 == 0){
+		for(final CardEntry entry : GameAssets.i.cards){
+			if(cnt % 5 == 0){
 				menu.row();
 			}
-			TextButton bt = GameAssets.i.textButton(entry.key);
+			TextButton bt = GameAssets.i.textButton(entry.name);
 			menu.add(bt).fill().pad(2).space(3);
-			final String cardID = entry.value;
 			bt.addListener(new ChangeListener() {
 				@Override
 				public void changed(ChangeEvent event, Actor actor) {
-					EnergyGame.i().setScreen(new EnergyGameScreen(cardID));
+					EnergyGame.i().setScreen(new EnergyGameScreen(entry.id, entry.name));
 				}
 			});
 			cnt++;

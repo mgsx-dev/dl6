@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Array;
 
 public class GameAssets {
 	public static final GameAssets i = new GameAssets();
@@ -22,7 +22,17 @@ public class GameAssets {
 	public BitmapFont font;
 	private Texture titleScreen;
 	public Skin skin;
-	public final ObjectMap<String, String> cards = new ObjectMap<String, String>();
+	public final Array<CardEntry> cards = new Array<CardEntry>();
+	
+	public static class CardEntry{
+		public String id, name;
+
+		public CardEntry(String name, String id) {
+			super();
+			this.id = id;
+			this.name = name;
+		}
+	}
 	
 	public void load(){
 		TiledMap card1 = new TmxMapLoader().load("card1.tmx");
@@ -31,8 +41,8 @@ public class GameAssets {
 		font.getData().scale(1f / 32f);
 		titleScreen = new Texture(Gdx.files.internal("title.png"));
 		skin = new Skin(Gdx.files.internal("skins/game-skin.json"));
-		for(int i=1 ; i<=8 ; i++){
-			cards.put("Board " + i, "card" + i);
+		for(int i=1 ; i<=10 ; i++){
+			cards.add(new CardEntry("Board " + i, "card" + i));
 		}
 	}
 

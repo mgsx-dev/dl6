@@ -46,12 +46,13 @@ public class EnergyGameScreen extends StageScreen
 	private boolean backToMenu;
 	private Color bgColor = Color.valueOf("464646");
 	
-	public EnergyGameScreen(String cardID) {
+	public EnergyGameScreen(String cardID, String name) {
 		super(new PixelPerfectViewport(EnergyGame.WIDTH, EnergyGame.HEIGHT));
 		map = GameAssets.i.card(cardID);
 		mapRenderer = new OrthogonalTiledMapRenderer(map);
 		shapes = new ShapeRenderer();
 		card = CardFactory.fromMap(map);
+		card.name = name;
 		world = new CardWorld(card, map, stage);
 		
 		
@@ -61,7 +62,10 @@ public class EnergyGameScreen extends StageScreen
 		// stage
 		stage.addActor(ui = new EnergyGameUI(card));
 		ui.setFillParent(true);
-		stage.addActor(new GraphDebug(card));
+		
+		if(GameRules.DEBUG){
+			stage.addActor(new GraphDebug(card));
+		}
 		
 		card.updateFlows();
 		
