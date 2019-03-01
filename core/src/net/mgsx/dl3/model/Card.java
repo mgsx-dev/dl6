@@ -73,6 +73,8 @@ public class Card {
 				if((cell.dirs & dir) != 0){
 					if(adj.component == null || (adj.component.type.toDirs & Dirs.inverse(dir)) != 0){
 						adj.dirs |= Dirs.inverse(dir);
+					}else{
+						cell.dirs &= ~dir;
 					}
 				}
 			}
