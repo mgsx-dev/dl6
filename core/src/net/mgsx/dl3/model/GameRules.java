@@ -11,7 +11,7 @@ public class GameRules {
 	
 	public static final boolean DEBUG = false;
 	
-	public static final int INITIAL_MONEY = 100;
+	public static final int INITIAL_MONEY = 200;
 	
 	public static final int ELECTRON_ENERGY = 10;
 	
