@@ -1,7 +1,8 @@
 apply plugin: "java"
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.main.resources.srcDirs = [ "res/" ]
 sourceSets.test.java.srcDirs = [ "test/" ]
 
 project.ext.mainClassName = "net.mgsx.dl3.DesktopLauncher"
@@ -37,7 +38,9 @@ task dist(type: Jar) {
  	// baseName = "my-custom-game-name"
 
     manifest {
-        attributes 'Main-Class': project.mainClassName
+        attributes(
+        	'Main-Class': project.mainClassName,
+        	'SplashScreen-Image': 'splash.png')
     }
     doLast { 
     	file(archivePath).setExecutable(true, false) 
